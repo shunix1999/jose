@@ -21,13 +21,16 @@ def leer_archivo(path):
         texto_limpio=""
     return texto_limpio
 
-
-def limpia_texto(texto):
+#ya no se usa esta funcion
+#def limpia_texto(texto):
     # Separamos esto para evitar que aparezcan los saltos de linea "\n"
-    texto = texto.splitlines()
+ #   texto = texto.splitlines()
     # concactena dos objetos, en este caso 2 strings
-    texto_limpio = " ".join(texto)
-    return texto_limpio
+  #  texto_limpio = " ".join(texto)
+    #texto_limpio = "string"
+    # print lowercase string
+    #print("Lowercase string:", string.casefold())
+  #  return texto_limpio
 
 
 def contar_palabras(texto):
@@ -46,8 +49,33 @@ def contar_palabras(texto):
     if "" in dicc:
         del(dicc[""])            
     return dicc
-    
 
+
+ #recibe en stopwords: una cadena de las stopwords
+ #recibe en texto: una cadena del texto a limpiar
+ #regresa el texto limpio 
+def eliminar_stopwords(dp, stopwords): 
+
+    diccionario = {} 
+
+    for (k,v) in dp.items(): 
+
+        if k not in stopwords: 
+
+           diccionario[k] = v 
+
+    return diccionario 
+
+'''set_spanish_stopwords = set(spanish_stopwords.split(" "))       
+    lista_texto = texto.split(" ")                # se crea una lista del texto
+    for palabra in lista_texto:
+        print(palabra.strip(",."))                # se ignoran puntos y comas
+        if palabra.lower() in set_stopwords:      # si la palabra en minúsculas se encuentra en stopwords
+            lista_texto.remove(palabra)           # se elimina
+    texto_limpio = " ".join(lista_texto)          # se hace una sola cadena de la lista 
+    return texto_limpio
+
+'''
 def imprime_diccionario(dicc, minimo):
     #   Crea e imprime un diccionario
     '''
@@ -62,22 +90,27 @@ def imprime_diccionario(dicc, minimo):
     return
 
 
-def main(path, min):
+def main(path, min, stopwords):
     #   Imprime las palabras y cuantas veces se repiten
     ''' 
         recibe en path: direccion del archivo
         recibe en min: minimo de palabras contadas a mostrar
     '''
     texto = leer_archivo(path)
+    stopwords = leer_archivo(stopwords)
+    #texto = eliminar_stopwords(texto,stopwords)
     dicc = contar_palabras(texto)
+    texto = eliminar_stopwords(dicc,stopwords) 
     imprime_diccionario(dicc, minimo)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--archivo', dest='archivo', help="nombre de archivo", required=True)
+    parser.add_argument('-s', '--stopwords', dest='stopwords', help="nombre de archivo",default = "spanish_stopwords.txt", required=False)
     parser.add_argument('-m', '--minimo', dest='minimo', default = 3, help="minimo de palabras repetidas", type = int, required=False)
     args = parser.parse_args()
     archivo = args.archivo
     minimo = args.minimo
-    main(archivo, minimo)
+    stopwords = args.stopwords
+    main(archivo, minimo, stopwords)
